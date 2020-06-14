@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
+using ConsoleHotKey;
 
 namespace EQWindowOpener
 {
-    using System;
-    using System.Diagnostics;
-    using System.Net.NetworkInformation;
-    using System.Runtime.InteropServices;
-    using System.Threading;
+
 
     class Program
     {
         static string windowTitlePrefix = "Client";
         static int windowTitleNum = 1;
+        static IntPtr windowHandle = IntPtr.Zero;
 
         [DllImport("user32.dll")]
         static extern int SetWindowText(IntPtr hWnd, string text);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int SetForegroundWindow(IntPtr hwnd);
+
         public static IntPtr WinGetHandle(string wName)
         {
             IntPtr hWnd = IntPtr.Zero;
@@ -36,6 +42,23 @@ namespace EQWindowOpener
             return String.Format("{0}{1}", windowTitlePrefix, windowTitleNum);
         }
 
+        static void HotKeyManager_HotKeyPressed(object sender, HotKeyEventArgs e)
+        {
+            if (windowHandle != IntPtr.Zero)
+            {
+                SetForegroundWindow(windowHandle);
+            }
+        }
+
+        static Keys getHotkey()
+        {
+            string hotkey = System.Configuration.ConfigurationManager.AppSettings["hotkey" + windowTitleNum.ToString()];
+            if (hotkey != null)
+                return (Keys)Enum.Parse(typeof(Keys), hotkey);
+            else
+                return Keys.None;
+        }
+
         static void Main(string[] args)
         {
             using (System.Diagnostics.Process p = new System.Diagnostics.Process())
@@ -51,16 +74,24 @@ namespace EQWindowOpener
                     FileName = @"eqgame.exe",
                     Arguments = @"patchme",
                     WorkingDirectory = System.Configuration.ConfigurationManager.AppSettings["EqDirectory"]
-            };
-
+                };
                 string window_title = getCurrentWindowTitle();
+
+                //Set HotKey Based on Window Number
+                if (getHotkey() != Keys.None)
+                {
+                    HotKeyManager.RegisterHotKey(getHotkey(), KeyModifiers.NoRepeat);
+                    HotKeyManager.HotKeyPressed += new EventHandler<HotKeyEventArgs>(HotKeyManager_HotKeyPressed);
+                }
+
                 p.Start();
                 System.Threading.SpinWait.SpinUntil(() => p.HasExited || p.MainWindowHandle != IntPtr.Zero);
+                windowHandle = p.MainWindowHandle;
                 while (!p.HasExited)
                 {
                     p.Refresh();
-                    if(p.MainWindowTitle != getCurrentWindowTitle())
-                    SetWindowText(p.MainWindowHandle, window_title);
+                    if (p.MainWindowTitle != getCurrentWindowTitle())
+                        SetWindowText(p.MainWindowHandle, window_title);
                     Thread.Sleep(100);
                 }
                 p.WaitForExit();
