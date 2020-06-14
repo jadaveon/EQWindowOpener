@@ -2,7 +2,7 @@
 A simple tool to open Everquest Client Windows with a standard naming convention in the window title and assign a hotkey to set focus on each. 
 
 ## Configuration
-You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.config) file to point to the location where eqgame.exe resides. Hotkeys can be defined for as many windows as desired. Values are case sensitive and must reflect a valid name from the Keys Enum. 
+You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.config) file to point to the location where eqgame.exe resides. Hotkeys can be defined for as many windows as desired. Values are case sensitive and must reflect a valid name from the Keys Enum. Numpad is used by default (Numlock must be on).
 ```XML
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
@@ -24,7 +24,7 @@ You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.
 ```
 
 ## Usage
-Run EQWindowOpener.exe. Each window will be given a sequential title (Client1,Client2,Client3, etc). The proccess will remain open in order to rename the window when the client periodically changes it back to "EverQuest". If running as administrator, the application must be in an accessible location (Example: C:\EQWindowOpener\). It's recommended to increase client background FPS in order to resolve issues with autofollow etc. '
+Run EQWindowOpener.exe. Each window will be given a sequential title (Client1,Client2,Client3, etc). The proccess will remain open in order to rename the window when the client periodically changes it back to "EverQuest". If running as administrator, the application must be in an accessible location (Example: C:\EQWindowOpener\). It's recommended to increase client background FPS in order to resolve issues with autofollow etc.
 
 ##Valid Key Names
 ```XML
