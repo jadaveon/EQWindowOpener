@@ -53,7 +53,7 @@ Two examples are provided. One using the numpad keys alone (numlock must be on),
 ## Usage
 Run EQWindowOpener.exe as Administrator. Each window will be given a sequential title (Client1,Client2,Client3, etc). The proccess will remain open in order to rename the window when the client periodically changes it back to "EverQuest". It's recommended to increase client background FPS in order to resolve issues with autofollow etc.
 
-##Valid Key Modifier Values
+## Valid Key Modifier Values
 If a key modifier value is specified, that key will need to be pressed and held prior to pressing the hotkey.
 ```XML
         Alt
@@ -63,7 +63,7 @@ If a key modifier value is specified, that key will need to be pressed and held 
         NoRepeat - Use this value if you do not wish to use a modfier
 ```
 
-##Valid Key Names
+## Valid Key Names
 ```XML
         // No Key Mapping
 		None
