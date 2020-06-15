@@ -20,12 +20,51 @@ namespace EQWindowOpener
         static int windowTitleNum = 1;
         static IntPtr windowHandle = IntPtr.Zero;
 
+        static void Main(string[] args)
+        {
+            using (System.Diagnostics.Process p = new System.Diagnostics.Process())
+            {
+                //Set Window Title Based on Current if Value is currently in use or not
+                while (WinGetHandle(GetCurrentWindowTitle()) != IntPtr.Zero)
+                {
+                    windowTitleNum++;
+                }
+
+                p.StartInfo = new System.Diagnostics.ProcessStartInfo()
+                {
+                    FileName = @"eqgame.exe",
+                    Arguments = @"patchme",
+                    WorkingDirectory = System.Configuration.ConfigurationManager.AppSettings["EqDirectory"]
+                };
+                string window_title = GetCurrentWindowTitle();
+
+                //Set HotKey Based on Window Number
+                if (GetHotkey() != Keys.None)
+                {
+                    HotKeyManager.RegisterHotKey(GetHotkey(), GetKeyMod());
+                    HotKeyManager.HotKeyPressed += new EventHandler<HotKeyEventArgs>(HotKeyManager_HotKeyPressed);
+                }
+
+                p.Start();
+                System.Threading.SpinWait.SpinUntil(() => p.HasExited || p.MainWindowHandle != IntPtr.Zero);
+                windowHandle = p.MainWindowHandle;
+                while (!p.HasExited)
+                {
+                    p.Refresh();
+                    if (p.MainWindowTitle != GetCurrentWindowTitle())
+                        SetWindowText(p.MainWindowHandle, window_title);
+                    Thread.Sleep(100);
+                }
+                p.WaitForExit();
+            }
+        }
+
         [DllImport("user32.dll")]
         static extern int SetWindowText(IntPtr hWnd, string text);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern int SetForegroundWindow(IntPtr hwnd);
+        static extern int SetForegroundWindow(IntPtr hwnd);
 
-        public static IntPtr WinGetHandle(string wName)
+        static IntPtr WinGetHandle(string wName)
         {
             IntPtr hWnd = IntPtr.Zero;
             foreach (Process pList in Process.GetProcesses())
@@ -37,7 +76,7 @@ namespace EQWindowOpener
             }
             return hWnd;
         }
-        public static string getCurrentWindowTitle()
+        static string GetCurrentWindowTitle()
         {
             return String.Format("{0}{1}", windowTitlePrefix, windowTitleNum);
         }
@@ -50,7 +89,7 @@ namespace EQWindowOpener
             }
         }
 
-        static Keys getHotkey()
+        static Keys GetHotkey()
         {
             string hotkey = System.Configuration.ConfigurationManager.AppSettings["hotkey" + windowTitleNum.ToString()];
             if (hotkey != null)
@@ -59,44 +98,13 @@ namespace EQWindowOpener
                 return Keys.None;
         }
 
-        static void Main(string[] args)
+        static KeyModifiers GetKeyMod()
         {
-            using (System.Diagnostics.Process p = new System.Diagnostics.Process())
-            {
-                //Set Window Title Based on Current if Value is currently in use or not
-                while (WinGetHandle(getCurrentWindowTitle()) != IntPtr.Zero)
-                {
-                    windowTitleNum++;
-                }
-
-                p.StartInfo = new System.Diagnostics.ProcessStartInfo()
-                {
-                    FileName = @"eqgame.exe",
-                    Arguments = @"patchme",
-                    WorkingDirectory = System.Configuration.ConfigurationManager.AppSettings["EqDirectory"]
-                };
-                string window_title = getCurrentWindowTitle();
-
-                //Set HotKey Based on Window Number
-                if (getHotkey() != Keys.None)
-                {
-                    HotKeyManager.RegisterHotKey(getHotkey(), KeyModifiers.NoRepeat);
-                    HotKeyManager.HotKeyPressed += new EventHandler<HotKeyEventArgs>(HotKeyManager_HotKeyPressed);
-                }
-
-                p.Start();
-                System.Threading.SpinWait.SpinUntil(() => p.HasExited || p.MainWindowHandle != IntPtr.Zero);
-                windowHandle = p.MainWindowHandle;
-                while (!p.HasExited)
-                {
-                    p.Refresh();
-                    if (p.MainWindowTitle != getCurrentWindowTitle())
-                        SetWindowText(p.MainWindowHandle, window_title);
-                    Thread.Sleep(100);
-                }
-                p.WaitForExit();
-            }
+            string modifier = System.Configuration.ConfigurationManager.AppSettings["keyModifier"];
+            if (modifier != null)
+                return (KeyModifiers)Enum.Parse(typeof(KeyModifiers), modifier);
+            else
+                return KeyModifiers.NoRepeat;
         }
-
     }
 }

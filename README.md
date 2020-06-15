@@ -2,7 +2,10 @@
 A simple tool to open Everquest Client Windows with a standard naming convention in the window title and assign a hotkey to set focus on each. 
 
 ## Configuration
-You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.config) file to point to the location where eqgame.exe resides. Hotkeys can be defined for as many windows as desired. Values are case sensitive and must reflect a valid name from the Keys Enum. Numpad is used by default (Numlock must be on). Currently there is no support for multiple key combinations, only single hotkeys per window.
+You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.config) file to point to the location where eqgame.exe resides. Hotkeys can be defined for as many windows as desired. Values are case sensitive and must reflect a valid name from the Keys Enum.
+Two examples are provided. One using the numpad keys alone (numlock must be on), and one using Ctrl and the 1-6 digit keys. The default is Ctrl + a digit key (Example Ctrl+1 for Client 1).
+
+###Numpad Example
 ```XML
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
@@ -13,6 +16,7 @@ You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.
     <!-- Everquest Directory -->
     <add key="EqDirectory" value="C:\wfh_v2"></add>
 	<!-- Hotkeys -->
+	<add key="keyModifier" value="NoRepeat"></add>
     <add key="hotkey1" value="NumPad1"></add>
     <add key="hotkey2" value="NumPad2"></add>
     <add key="hotkey3" value="NumPad3"></add>
@@ -23,8 +27,41 @@ You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.
 </configuration>
 ```
 
+###Ctrl + Digit Example
+```XML
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
+    </startup>
+  <appSettings>
+    <!-- Everquest Directory -->
+    <add key="EqDirectory" value="C:\wfh_v2"></add>
+	<!-- Hotkeys -->
+    <add key="keyModifier" value="Control"></add>
+    <add key="hotkey1" value="D1"></add>
+    <add key="hotkey2" value="D2"></add>
+    <add key="hotkey3" value="D3"></add>
+    <add key="hotkey4" value="D4"></add>
+    <add key="hotkey5" value="D5"></add>
+    <add key="hotkey6" value="D6"></add>
+  </appSettings>
+</configuration>
+```
+
+
 ## Usage
-Run EQWindowOpener.exe. Each window will be given a sequential title (Client1,Client2,Client3, etc). The proccess will remain open in order to rename the window when the client periodically changes it back to "EverQuest". If running as administrator, the application must be in an accessible location (Example: C:\EQWindowOpener\). It's recommended to increase client background FPS in order to resolve issues with autofollow etc.
+Run EQWindowOpener.exe as Administrator. Each window will be given a sequential title (Client1,Client2,Client3, etc). The proccess will remain open in order to rename the window when the client periodically changes it back to "EverQuest". It's recommended to increase client background FPS in order to resolve issues with autofollow etc.
+
+##Valid Key Modifier Values
+If a key modifier value is specified, that key will need to be pressed and held prior to pressing the hotkey.
+```XML
+        Alt
+        Control
+        Shift
+        Windows
+        NoRepeat - Use this value if you do not wish to use a modfier
+```
 
 ##Valid Key Names
 ```XML
