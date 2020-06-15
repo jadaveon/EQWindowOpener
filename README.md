@@ -5,7 +5,7 @@ A simple tool to open Everquest Client Windows with a standard naming convention
 You need to set the EqDirectory paramater in the App.Config (EQWindowOpener.exe.config) file to point to the location where eqgame.exe resides. Hotkeys can be defined for as many windows as desired. Values are case sensitive and must reflect a valid name from the Keys Enum.
 Two examples are provided. One using the numpad keys alone (numlock must be on), and one using Ctrl and the 1-6 digit keys. The default is Ctrl + a digit key (Example Ctrl+1 for Client 1).
 
-###Numpad Example
+### Numpad Example
 ```XML
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
@@ -27,7 +27,7 @@ Two examples are provided. One using the numpad keys alone (numlock must be on),
 </configuration>
 ```
 
-###Ctrl + Digit Example
+### Ctrl + Digit Example
 ```XML
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
