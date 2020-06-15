@@ -37,7 +37,7 @@ Two examples are provided. One using the numpad keys alone (numlock must be on),
   <appSettings>
     <!-- Everquest Directory -->
     <add key="EqDirectory" value="C:\wfh_v2"></add>
-	<!-- Hotkeys -->
+    <!-- Hotkeys -->
     <add key="keyModifier" value="Control"></add>
     <add key="hotkey1" value="D1"></add>
     <add key="hotkey2" value="D2"></add>
