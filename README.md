@@ -15,8 +15,8 @@ Two examples are provided. One using the numpad keys alone (numlock must be on),
   <appSettings>
     <!-- Everquest Directory -->
     <add key="EqDirectory" value="C:\wfh_v2"></add>
-	<!-- Hotkeys -->
-	<add key="keyModifier" value="NoRepeat"></add>
+    <!-- Hotkeys -->
+    <add key="keyModifier" value="NoRepeat"></add>
     <add key="hotkey1" value="NumPad1"></add>
     <add key="hotkey2" value="NumPad2"></add>
     <add key="hotkey3" value="NumPad3"></add>
@@ -66,7 +66,7 @@ If a key modifier value is specified, that key will need to be pressed and held 
 ## Valid Key Names
 ```XML
         // No Key Mapping
-		None
+        None
         // The left mouse button.
         LButton
         // The right mouse button.
